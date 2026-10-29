@@ -1,0 +1,61 @@
+-- Practical 3: Spatial Data Storage and Retrieval in MySQL
+
+-- 1. Create database
+CREATE DATABASE SpatialDB;
+USE SpatialDB;
+
+-- 2. Create table
+CREATE TABLE College (
+    college_id INT PRIMARY KEY,
+    college_name VARCHAR(100),
+    city VARCHAR(50),
+    location POINT NOT NULL SRID 4326
+);
+
+-- 3. Insert sample college locations
+INSERT INTO College VALUES
+(1, 'FAMT', 'Ratnagiri',
+ ST_GeomFromText('POINT(73.3000 16.9900)', 4326)),
+(2, 'College B', 'Ratnagiri',
+ ST_GeomFromText('POINT(73.3100 16.9950)', 4326)),
+(3, 'College C', 'Ratnagiri',
+ ST_GeomFromText('POINT(73.3200 17.0000)', 4326));
+
+-- 4. Display location as text
+SELECT college_name,
+       ST_AsText(location) AS location_text
+FROM College;
+
+-- 5. Find X and Y coordinates
+SELECT college_name,
+       ST_X(location) AS X_coordinate,
+       ST_Y(location) AS Y_coordinate
+FROM College;
+
+-- 6. Calculate distance between two colleges
+SELECT A.college_name AS College_1,
+       B.college_name AS College_2,
+       ST_Distance(A.location, B.location) AS Distance_Meters
+FROM College A
+JOIN College B
+ON A.college_id = 1 AND B.college_id = 2;
+
+-- 7. Find colleges within 2000 metres of FAMT
+SET @loc = ST_GeomFromText(
+    'POINT(73.3000 16.9900)', 4326
+);
+
+SELECT college_name,
+       ST_Distance(location, @loc) AS Distance_Meters
+FROM College
+WHERE ST_Distance(location, @loc) <= 2000
+ORDER BY Distance_Meters;
+
+-- 8. Display complete information
+SELECT college_id,
+       college_name,
+       city,
+       ST_AsText(location) AS Location,
+       ST_X(location) AS Longitude,
+       ST_Y(location) AS Latitude
+FROM College;
