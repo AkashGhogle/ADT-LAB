@@ -1,0 +1,44 @@
+-- Practical 6: Horizontal Fragmentation
+
+CREATE DATABASE EmployeeDB;
+USE EmployeeDB;
+
+-- Create Employee table
+CREATE TABLE Employee (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    address VARCHAR(50),
+    salary DECIMAL(10,2)
+);
+
+-- Insert 5 records
+INSERT INTO Employee VALUES
+(1, 'Akash', 'Pune', 30000),
+(2, 'Amit', 'Mumbai', 35000),
+(3, 'Priya', 'Pune', 40000),
+(4, 'Sneha', 'Mumbai', 45000),
+(5, 'Rahul', 'Pune', 50000);
+
+-- 1. Display all employees
+SELECT * FROM Employee;
+
+-- 2. Horizontal Fragmentation: Pune employees
+CREATE TABLE Employee_Pune AS
+SELECT * FROM Employee
+WHERE address = 'Pune';
+
+-- 3. Horizontal Fragmentation: Mumbai employees
+CREATE TABLE Employee_Mumbai AS
+SELECT * FROM Employee
+WHERE address = 'Mumbai';
+
+-- 4. Display Pune fragment
+SELECT * FROM Employee_Pune;
+
+-- 5. Display Mumbai fragment
+SELECT * FROM Employee_Mumbai;
+
+-- 6. Reconstruct the original table using UNION ALL
+SELECT * FROM Employee_Pune
+UNION ALL
+SELECT * FROM Employee_Mumbai;
