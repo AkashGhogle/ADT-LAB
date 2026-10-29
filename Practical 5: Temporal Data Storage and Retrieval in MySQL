@@ -1,0 +1,58 @@
+-- Practical 5: Temporal Data Storage and Retrieval
+
+CREATE DATABASE TemporalDB;
+USE TemporalDB;
+
+-- Create Customer table
+CREATE TABLE Customer (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    address VARCHAR(100),
+    valid_from DATE,
+    valid_to DATE,
+    Transaction_start DATETIME,
+    Transaction_end DATETIME
+);
+
+-- Insert 5 records
+INSERT INTO Customer VALUES
+(1, 'Akash', 'Ratnagiri', '2025-01-01', '2025-12-31',
+ '2025-01-01 10:00:00', '2025-12-31 23:59:59'),
+
+(2, 'Amit', 'Mumbai', '2025-02-01', '2025-12-31',
+ '2025-02-01 11:00:00', '2025-12-31 23:59:59'),
+
+(3, 'Priya', 'Pune', '2025-03-01', '2025-12-31',
+ '2025-03-01 12:00:00', '2025-12-31 23:59:59'),
+
+(4, 'Sneha', 'Kolhapur', '2025-04-01', '2025-12-31',
+ '2025-04-01 09:00:00', '2025-12-31 23:59:59'),
+
+(5, 'Rahul', 'Nashik', '2025-05-01', '2025-12-31',
+ '2025-05-01 10:30:00', '2025-12-31 23:59:59');
+
+-- 1. Display all customer records
+SELECT * FROM Customer;
+
+-- 2. Retrieve records valid on a particular date
+SELECT * FROM Customer
+WHERE '2025-06-15' BETWEEN valid_from AND valid_to;
+
+-- 3. Retrieve records using valid time
+SELECT * FROM Customer
+WHERE valid_from <= '2025-06-15'
+  AND valid_to >= '2025-06-15';
+
+-- 4. Retrieve records using transaction time
+SELECT * FROM Customer
+WHERE Transaction_start <= '2025-06-15 12:00:00'
+  AND Transaction_end >= '2025-06-15 12:00:00';
+
+-- 5. Change a customer's address
+UPDATE Customer
+SET address = 'Pune'
+WHERE id = 1;
+
+-- 6. Display updated customer details
+SELECT * FROM Customer
+WHERE id = 1;
