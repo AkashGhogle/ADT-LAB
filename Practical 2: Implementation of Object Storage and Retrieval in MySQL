@@ -1,0 +1,52 @@
+CREATE DATABASE ObjectDB;
+USE ObjectDB;
+
+CREATE TABLE StoredObjects (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    file_name VARCHAR(100),
+    file_type VARCHAR(50),
+    file_data LONGBLOB
+);
+
+INSERT INTO StoredObjects
+(file_name, file_type, file_data)
+VALUES (
+    'sample.jpg',
+    'image/jpeg',
+    LOAD_FILE('C:/mysql-files/sample.jpg')
+);
+
+SELECT
+    id,
+    file_name,
+    file_type,
+    file_data IS NOT NULL AS data_stored
+FROM StoredObjects;
+
+SELECT
+    id,
+    file_name,
+    file_type
+FROM StoredObjects;
+
+SELECT
+    file_name,
+    OCTET_LENGTH(file_data) AS size_in_bytes,
+    ROUND(OCTET_LENGTH(file_data) / 1024, 2) AS size_in_KB
+FROM StoredObjects;
+
+UPDATE StoredObjects
+SET file_name = 'new.jpg',
+    file_type = 'image/jpeg',
+    file_data = LOAD_FILE('C:/mysql-files/new.jpg')
+WHERE id = 1;
+
+SELECT id, file_name, file_type
+FROM StoredObjects;
+
+SELECT COUNT(*) AS total_objects
+FROM StoredObjects;
+
+SELECT file_data
+FROM StoredObjects
+WHERE id = 1;
