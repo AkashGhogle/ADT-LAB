@@ -1,0 +1,89 @@
+// Practical 7: Mobile Query Processing Using MongoDB
+
+// 1. Create and select database
+use UserDB
+
+// 2. Create Users collection
+db.createCollection("Users")
+
+// 3. Insert 5 user records
+db.Users.insertMany([
+    {
+        id: 1,
+        name: "Akash",
+        city: "Ratnagiri",
+        latitude: 16.99,
+        longitude: 73.30
+    },
+    {
+        id: 2,
+        name: "Amit",
+        city: "Mumbai",
+        latitude: 19.07,
+        longitude: 72.87
+    },
+    {
+        id: 3,
+        name: "Priya",
+        city: "Pune",
+        latitude: 18.52,
+        longitude: 73.85
+    },
+    {
+        id: 4,
+        name: "Sneha",
+        city: "Kolhapur",
+        latitude: 16.70,
+        longitude: 74.24
+    },
+    {
+        id: 5,
+        name: "Rahul",
+        city: "Ratnagiri",
+        latitude: 17.00,
+        longitude: 73.31
+    }
+])
+
+// 4. Display all users
+db.Users.find()
+
+// 5. Find users from Ratnagiri
+db.Users.find({ city: "Ratnagiri" })
+
+// 6. Find a user by ID
+db.Users.findOne({ id: 1 })
+
+// 7. Update a user's city
+db.Users.updateOne(
+    { id: 1 },
+    { $set: { city: "Pune" } }
+)
+
+// 8. Verify updated record
+db.Users.findOne({ id: 1 })
+
+// 9. Find users within a latitude range
+db.Users.find({
+    latitude: {
+        $gte: 16.90,
+        $lte: 17.10
+    }
+})
+
+// 10. Find users within a longitude range
+db.Users.find({
+    longitude: {
+        $gte: 73.20,
+        $lte: 73.40
+    }
+})
+
+// 11. Delete a user
+db.Users.deleteOne({ id: 5 })
+
+// 12. Display remaining users
+db.Users.find()
+
+// 13. Count total users
+db.Users.countDocuments()
