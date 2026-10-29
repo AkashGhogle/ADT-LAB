@@ -1,0 +1,51 @@
+-- Practical 4: Spatial Data Using LineString
+
+CREATE DATABASE RouteDB;
+USE RouteDB;
+
+-- Create table
+CREATE TABLE Routes (
+    route_id INT PRIMARY KEY,
+    route_name VARCHAR(100),
+    route_line LINESTRING NOT NULL SRID 4326
+);
+
+-- Insert sample route from FAMT towards GIT
+INSERT INTO Routes VALUES (
+    1,
+    'FAMT to GIT',
+    ST_GeomFromText(
+        'LINESTRING(73.3000 16.9900, 73.3100 16.9950, 73.3200 17.0000)',
+        4326
+    )
+);
+
+-- 1. Display the complete route
+SELECT route_id, route_name,
+       ST_AsText(route_line) AS Route
+FROM Routes;
+
+-- 2. Calculate route length
+SELECT route_name,
+       ST_Length(route_line) AS Route_Length
+FROM Routes;
+
+-- 3. Count the number of points
+SELECT route_name,
+       ST_NumPoints(route_line) AS Number_Of_Points
+FROM Routes;
+
+-- 4. Find the starting point
+SELECT route_name,
+       ST_AsText(ST_StartPoint(route_line)) AS Start_Point
+FROM Routes;
+
+-- 5. Find the ending point
+SELECT route_name,
+       ST_AsText(ST_EndPoint(route_line)) AS End_Point
+FROM Routes;
+
+-- 6. Retrieve the second point
+SELECT route_name,
+       ST_AsText(ST_PointN(route_line, 2)) AS Second_Point
+FROM Routes;
