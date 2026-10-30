@@ -42,3 +42,40 @@ SELECT * FROM Employee_Mumbai;
 SELECT * FROM Employee_Pune
 UNION ALL
 SELECT * FROM Employee_Mumbai;
+
+
+-- Create primary database
+CREATE DATABASE PrimaryDB;
+USE PrimaryDB;
+
+CREATE TABLE Employee (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    address VARCHAR(50),
+    salary DECIMAL(10,2)
+);
+
+INSERT INTO Employee VALUES
+(1, 'Akash', 'Pune', 30000),
+(2, 'Amit', 'Mumbai', 35000),
+(3, 'Priya', 'Pune', 40000),
+(4, 'Sneha', 'Mumbai', 45000),
+(5, 'Rahul', 'Pune', 50000);
+
+-- Create replica database
+CREATE DATABASE ReplicaDB;
+
+CREATE TABLE ReplicaDB.Employee AS
+SELECT * FROM PrimaryDB.Employee;
+
+-- Verify replica data
+SELECT * FROM ReplicaDB.Employee;
+
+-- Synchronize the replica by copying current primary data
+DELETE FROM ReplicaDB.Employee;
+
+INSERT INTO ReplicaDB.Employee
+SELECT * FROM PrimaryDB.Employee;
+
+-- Verify synchronized data
+SELECT * FROM ReplicaDB.Employee;
